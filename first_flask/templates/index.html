@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{ title }}</title>
+</head>
+<body>
+  {% if title == "home" %}
+    <h1>This is the home page.</h1>
+    <ul>
+      {% for word in words %}
+        <li>{{ word }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <p>This is some more cool stuff</p>
+  <form action="/process" method="post">
+    <label for="first_name">First Name:</label>
+    <input type="text" name="first_name" placeholder="Vanilla">
+    <label for="last_name">Last Name:</label>
+    <input type="text" name="last_name" placeholder="Ice">
+    <label for="email">Email:</label>
+    <input type="text" name="email" placeholder="vanilla@vanillaice.com">
+    <input type="submit" value="Send To Process Route">
+  </form>
+</body>
+</html>
