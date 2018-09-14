@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" 
+   href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <link rel="stylesheet" type="text/css" 
+   href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  <title>Survey Form</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Survey Form</h1>
+    <a href="/clear" class="button">Clear Session</a>
+    <form action="/process" method="post">
+      <label for="name">Name:</label>
+      <input type="text" name="name" placeholder="Vanilla Ice">
+      <label for="favorite_language">Favorite Language:</label>
+      <select name="favorite_language">
+        <option value="python">Python</option>
+        <option value="javascript">JavaScript</option>
+        <option value="csharp">C#</option>
+        <option value="ruby">Ruby</option>
+      </select>
+      <label for="comment">Comment:</label>
+      <textarea name="comment" id="" cols="30" rows="10"></textarea>
+      <input type="submit" value="Complete Survey">
+    </form>
+  </div>
+</body>
+</html>
