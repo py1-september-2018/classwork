@@ -22,12 +22,29 @@ class SList:
       curr.next = node
     return self
 
+  def pop(self):
+    # edge cases
+      # If there are no nodes
+    if not self.head:
+      return None
+      # If there is only one node
+    elif self.head.next == None:
+      temp = self.head
+      self.head = None
+    else:
+      curr = self.head
+      while curr.next.next != None:
+        curr = curr.next
+      temp = curr.next
+      curr.next = None
+    return temp
+
   def display(self):
     if self.head == None:
       print(None)
     else:
-      curr = self.head
       result = []
+      curr = self.head
       while(curr):
         result.append(curr.value)
         curr = curr.next
@@ -51,4 +68,5 @@ class SList:
 # }
 
 slist = SList()
-slist.append('A').display().append('B').display().append('C').display()
+slist.append('A').append('B').append('C').display().pop()
+slist.display()

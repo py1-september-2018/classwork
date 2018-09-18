@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 app = Flask(__name__)
 app.secret_key = 'jkasl;kfjahwioewofkjkl'
 
@@ -8,6 +8,21 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
+  errors = False
+  # check if name is longer than 2 characters
+  if len(request.form['name']) <= 2:
+    flash('Name must be at least 3 characters long.')
+    errors = True
+  # check if comment is longer than 5 characters
+  if len(request.form['comment']) <= 5:
+    flash('Comment must be at least 6 characters long.')
+    errors = True
+    
+  # if there are errors, show messages on form
+  if errors == True:
+    return redirect('/')
+  # if there are no errors, show success page
+
   session['name'] = request.form['name']
   session['favorite_language'] = request.form['favorite_language']
   session['comment'] = request.form['comment']
