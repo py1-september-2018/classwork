@@ -45,17 +45,48 @@ def register():
       'username': request.form['username'],
       'pw_hash': hashed_pw
     }
-    user = mysql.query_db(insert_query, insert_data)
-    print(user, '<------ user')
+    user_id = mysql.query_db(insert_query, insert_data)
+    session['user_id'] = user_id
   return redirect('/home')
 
 @app.route('/login', methods=['POST'])
 def login():
-  return redirect('/home')
+  username_query = 'SELECT * FROM users WHERE username=%(username)s'
+  query_data = {
+    'username': request.form['username']
+  }
+  mysql = connectToMySQL('ninja_gold')
+  matching_users = mysql.query_db(username_query, query_data)
+
+  if len(matching_users) == 0:
+    flash('Username or password incorrect')
+    return redirect('/')
+  else:
+    user = matching_users[0]
+    if bcrypt.check_password_hash(user['pw_hash'], request.form['password']):
+      session['user_id'] = user['id']
+      return redirect('/home')
+    else:
+      flash('Username or password incorrect')
+      return redirect('/')
 
 @app.route('/home')
 def home():
-  return render_template('home.html', username="Wes")
+  if 'user_id' not in session:
+    return redirect('/')
+  
+  username_query = 'SELECT username FROM users WHERE id = %(user_id)s;'
+  query_data = {
+    'user_id': session['user_id']
+  }
+  mysql = connectToMySQL('ninja_gold')
+  # matching_users = mysql.query_db(username_query, query_data)
+  # user = matching_users[0]
+
+  user = mysql.query_db(username_query, query_data)[0]
+
+  # matching_users = mysql.query_db(username_query, query_data)
+  return render_template('home.html', username=user['username'])
 
 if __name__ == '__main__':
   app.run(debug=True)
