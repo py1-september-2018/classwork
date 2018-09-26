@@ -1,0 +1,17 @@
+.location {
+  width: 200px;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: top;
+}
+
+.location-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.gold-count {
+  border: 1px solid black;
+  padding: 5px;
+  width: 200px;
+}

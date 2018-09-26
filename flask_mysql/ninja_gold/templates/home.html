@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" 
+   href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <link rel="stylesheet" type="text/css" 
+   href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>Home</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Ninja Gold {{ user['username'] }}</h1>
+    <div class="gold-count">
+      <p>You have {{ user['gold'] }} golds.</p>
+    </div>
+    <a href="/locations/new" class="button">Create A Location</a>
+    <div class="location-container">
+      {% for location in locations %}
+        <div class="location">
+          <form action="/activities/{{ location['id'] }}/create" method="post">
+            <h3>{{ location['name'] }}</h3>
+            <h4>Earns {{ location['min_gold'] }} - {{ location['max_gold'] }} golds.</h4>
+            <input type="submit" value="Visit {{ location['name'] }}">
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="activities">
+      {% for activity in activities %}
+        <p>{{ activity }}</p>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>
