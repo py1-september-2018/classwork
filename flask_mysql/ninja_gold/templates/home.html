@@ -31,7 +31,7 @@
     </div>
     <div class="activities">
       {% for activity in activities %}
-        <p>{{ activity }}</p>
+        <p class="{{ activity['css_class'] }}">{{ activity['content'] }}</p>
       {% endfor %}
     </div>
   </div>

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, session, request, flash
 from mysqlconnection import connectToMySQL
+from queries import *
 from flask_bcrypt import Bcrypt
 import random
 
@@ -91,11 +92,9 @@ def home():
   mysql = connectToMySQL('ninja_gold')
   locations_list = mysql.query_db('SELECT * FROM locations;')
 
-  activities_query = 'SELECT * FROM activities WHERE user_id = %(user_id)s;'
-  mysql = connectToMySQL('ninja_gold')
-  activities_list = mysql.query_db(activities_query, query_data)
+  activities_list = get_activities(session['user_id'])
 
-  return render_template('home.html', user=user_from_db, locations=locations_list, activites=activities_list)
+  return render_template('home.html', user=user_from_db, locations=locations_list, activities=activities_list)
 
 @app.route('/locations/new')
 def new_location():
@@ -150,12 +149,38 @@ def process(location_id):
   }
   mysql = connectToMySQL('ninja_gold')
   location_list = mysql.query_db(location_query, location_data)
-  location = location_list[0]
 
-  print("*" * 80)
-  print(location)
-  print("*" * 80)
+  try:
+    location = location_list[0]
+  except IndexError:
+    return redirect('/home')
+
   gold = random.randint(location['min_gold'], location['max_gold'])
+
+  activity_query = 'INSERT INTO activities (gold_amount, user_id, locations_id, created_at, updated_at) VALUES (%(gold)s, %(user_id)s, %(location_id)s, NOW(), NOW());'
+  activity_data = {
+    'gold': gold,
+    'user_id': session['user_id'],
+    'location_id': location['id']
+  }
+  mysql = connectToMySQL('ninja_gold')
+  mysql.query_db(activity_query, activity_data)
+
+  user_get = 'SELECT gold FROM users WHERE id = %(user_id)s;'
+  user_data = {
+    'user_id': session['user_id']
+  }
+  mysql = connectToMySQL('ninja_gold')
+  users_list = mysql.query_db(user_get, user_data)
+  user = users_list[0]
+
+  user_query = 'UPDATE users SET gold = %(gold)s WHERE id = %(user_id)s;'
+  user_data = {
+    'gold': user['gold'] + gold,#old gold plus new gold,
+    'user_id': session['user_id']
+  }
+  mysql = connectToMySQL('ninja_gold')
+  mysql.query_db(user_query, user_data)
 
   return redirect('/home')
 
