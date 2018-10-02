@@ -1,3 +1,6 @@
 flaskEnv/
 *.pyc
 .vscode/
+.DS_Store
+__pycache__/
+.djangoEnv/
