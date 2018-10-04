@@ -35,4 +35,5 @@ def show(req, id):
   return render(req, 'main/show.html', context)
 
 def clear(req):
-  pass
+  req.session.clear()
+  return redirect('/')
