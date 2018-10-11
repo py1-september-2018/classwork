@@ -1,0 +1,44 @@
+{% extends './layout.html' %}
+{% block body %}
+  <h1>Login or Register</h1>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="form-container">
+    <h2>Register</h2>
+    <form action="/users/create/" method="post">
+      {% csrf_token %}
+      <label for="first_name">First Name:</label>
+      <input type="text" name="first_name" placeholder="Vanilla">
+      <label for="last_name">Last Name:</label>
+      <input type="text" name="last_name" placeholder="Ice">
+      <label for="email">Email:</label>
+      <input type="text" name="email" placeholder="vanilla@ice.com">
+      <label for="password">Password:</label>
+      <input type="password" name="password" placeholder="password">
+      <label for="gender">Gender:</label>
+      <input type="radio" name="gender" value="male"> Male
+      <input type="radio" name="gender" value="female"> Female
+      <input type="radio" name="gender" value="other" checked> Other
+      <label for="description">A short description:</label>
+      <textarea name="description" id="" cols="30" rows="10"></textarea>
+      <label for="birth_date">DOB:</label>
+      <input type="date" name="birth_date">
+      <input type="submit" value="Register">
+    </form>
+  </div>
+  <div class="form-container">
+    <h2>Login</h2>
+    <form action="/users/login/" method="post">
+      <label for="email">Email:</label>
+      <input type="text" name="email" placeholder="vanilla@ice.com">
+      <label for="password">Password:</label>
+      <input type="password" name="password" placeholder="password">
+      <input type="submit" value="Login">
+    </form>
+  </div>
+{% endblock %}
