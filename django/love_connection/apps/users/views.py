@@ -4,7 +4,7 @@ from .models import User
 
 # Create your views here.
 def index(req):
-  pass
+  return render(req, 'users/index.html')
 
 def create(req):
   if req.method != 'POST':
@@ -19,6 +19,19 @@ def create(req):
     print(user)
     req.session['user_id'] = user.id
   return redirect('users:new')
+
+def login(req):
+  if req.method != 'POST':
+    return redirect('users:new')
+
+  valid, response = User.objects.login(req.POST)
+  if valid == True:
+    req.session['user_id'] = response
+    return redirect("users:index")
+  else:
+    messages.error(req, response)
+
+  return redirect("users:new")
 
 def update(req, id):
   pass
