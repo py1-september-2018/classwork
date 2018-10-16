@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import Match
 
 # Create your views here.
+def create(req):
+  Match.objects.add_match(req.POST)
+  return redirect('users:index')

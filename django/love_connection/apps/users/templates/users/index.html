@@ -1,4 +1,33 @@
 {% extends './layout.html' %}
 {% block body %}
   <h1>You are at the users index.</h1>
+  {% if not_matched %}
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in not_matched %}
+          <tr>
+            <td><a href="{% url 'users:show' user.id %}">{{ user.first_name }} {{ user.last_name }}</a></td>
+            <td>{{ user.gender }}</td>
+            <td>{{ user.description }}</td>
+            <td>
+              <form action="{% url 'matches:create' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="user" value="{{ request.session.user_id }}">
+                <input type="hidden" name="matched_user" value="{{ user.id }}">
+                <input type="submit" value="Match">
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 {% endblock %}

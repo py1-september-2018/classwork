@@ -4,7 +4,15 @@ from .models import User
 
 # Create your views here.
 def index(req):
-  return render(req, 'users/index.html')
+  if 'user_id' not in req.session:
+    return redirect('users:new')
+
+  context = {
+    'mutual_matches': [],
+    'matches_to': [],
+    'not_matched': User.objects.exclude(id=req.session['user_id'])
+  }
+  return render(req, 'users/index.html', context)
 
 def create(req):
   if req.method != 'POST':
@@ -33,6 +41,10 @@ def login(req):
 
   return redirect("users:new")
 
+def logout(req):
+  req.session.clear()
+  return redirect('users:new')
+
 def update(req, id):
   pass
 
@@ -46,4 +58,15 @@ def edit(req, id):
   pass
 
 def show(req, id):
-  pass
+  if 'user_id' not in req.session:
+    return redirect("users:new")
+  
+  try:
+    user = User.objects.get(id=id)
+  except:
+    return redirect("users:index")
+
+  context = {
+    'user': user
+  }
+  return render(req, 'users/show.html', context)
