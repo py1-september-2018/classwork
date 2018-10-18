@@ -19,14 +19,14 @@ class MatchManager(models.Manager):
       error = True
 
     if not error:
-      self.create(user=user_from, matched_user=user_to)
+      self.create(user_from=user_from, user_to=user_to)
       return True
     else:
       return False
 
 class Match(models.Model):
-  user = models.ForeignKey(User, related_name="matched_to")
-  matched_user = models.ForeignKey(User, related_name="matched_from")
+  user_from = models.ForeignKey(User, related_name="matched_to")
+  user_to = models.ForeignKey(User, related_name="matched_from")
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   objects = MatchManager()

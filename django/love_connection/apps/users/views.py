@@ -1,16 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import User
-
+from ..matches.models import Match
 # Create your views here.
 def index(req):
   if 'user_id' not in req.session:
     return redirect('users:new')
 
+  # user = User.objects.get(id=req.session['user_id'])
+  # print(user.matched_to.all())
+  # Article.objects.filter(reporter__first_name='John', reporter__last_name='Smith')
+
+  current_user_matches_sent = Match.objects.filter(user_from=req.session['user_id'])
+  current_user_matches_received = Match.objects.filter(user_to=req.session['user_id'])
+  
+  print(current_user_matches_sent)
+
   context = {
-    'mutual_matches': [],
-    'matches_to': [],
-    'not_matched': User.objects.exclude(id=req.session['user_id'])
+    'mutual_matches': User.objects.filter(matched_to__in=current_user_matches_received).filter(matched_from__in=current_user_matches_sent),
+    'matches_received': User.objects.filter(matched_to__in=current_user_matches_received),
+    'matches_to': User.objects.filter(matched_from__in=current_user_matches_sent),
+    # 'not_matched': User.objects.exclude(matched_from=current_user_matches_sent).exclude(id=req.session['user_id'])
+    'not_matched': User.objects.exclude(matched_from__in=current_user_matches_sent).exclude(id=req.session['user_id'])
   }
   return render(req, 'users/index.html', context)
 
@@ -66,7 +77,12 @@ def show(req, id):
   except:
     return redirect("users:index")
 
+
+  current_user_matches_received = user.matched_from.all()
+  current_user_matches_sent = user.matched_to.all()
+
   context = {
-    'user': user
+    'user': user,
+    'mutual_matches': User.objects.filter(matched_from__in = current_user_matches_sent).filter(matched_to__in = current_user_matches_received)
   }
   return render(req, 'users/show.html', context)

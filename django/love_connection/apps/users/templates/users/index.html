@@ -1,6 +1,53 @@
 {% extends './layout.html' %}
 {% block body %}
-  <h1>You are at the users index.</h1>
+<h1>You are at the users index.</h1>
+  <h2>Users You've Mutually Matched With</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in mutual_matches %}
+      <tr>
+        <td><a href="{% url 'users:show' user.id %}">{{ user.first_name }} {{ user.last_name }}</a></td>
+        <td>{{ user.gender }}</td>
+        <td>{{ user.description }}</td>
+        <td>
+          TBD
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>Users You've Sent Matches To</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in matches_to %}
+      <tr>
+        <td><a href="{% url 'users:show' user.id %}">{{ user.first_name }} {{ user.last_name }}</a></td>
+        <td>{{ user.gender }}</td>
+        <td>{{ user.description }}</td>
+        <td>
+          TBD
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>Users Not Matched</h2>
   {% if not_matched %}
     <table>
       <thead>
