@@ -1,0 +1,27 @@
+gunicorn --bind 0.0.0.0:8000 love_connection.wsgi:application
+
+[Unit]
+Description=gunicorn daemon
+After=network.target
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/deploy_demo
+ExecStart=/home/ubuntu/deploy_demo/venv/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/deploy_demo/love_connection.sock love_connection.wsgi:application
+[Install]
+WantedBy=multi-user.target
+
+sudo vim /etc/nginx/sites-available/love_connection
+
+server {
+  listen 80;
+  server_name 18.222.254.12;
+  location = /favicon.ico { access_log off; log_not_found off; }
+  location /static/ {
+      root /home/ubuntu/deploy_demo;
+  }
+  location / {
+      include proxy_params;
+      proxy_pass http://unix:/home/ubuntu/deploy_demo/love_connection.sock;
+  }
+}
