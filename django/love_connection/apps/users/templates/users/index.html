@@ -1,6 +1,17 @@
 {% extends './layout.html' %}
+{% block head %}
+  {% load static %}
+  <script src="{% static 'users/scripts/ajax.js' %}"></script>
+{% endblock %}
 {% block body %}
 <h1>You are at the users index.</h1>
+  <form action="{% url 'users:search' %}" id="user-search-form">
+    {% csrf_token %}
+    <input type="text" id="user-search-input">
+    <input type="submit" value="Submit">
+  </form>
+  <div class="found-users">
+  </div>
   <h2>Users You've Mutually Matched With</h2>
   <table>
     <thead>
@@ -18,7 +29,12 @@
         <td>{{ user.gender }}</td>
         <td>{{ user.description }}</td>
         <td>
-          TBD
+          <form action="{% url 'matches:delete' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user" value="{{ request.session.user_id }}">
+            <input type="hidden" name="unmatched_user" value="{{ user.id }}">
+            <input type="submit" value="Unmatch">
+          </form>
         </td>
       </tr>
       {% endfor %}
@@ -41,7 +57,12 @@
         <td>{{ user.gender }}</td>
         <td>{{ user.description }}</td>
         <td>
-          TBD
+          <form action="{% url 'matches:delete' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user" value="{{ request.session.user_id }}">
+            <input type="hidden" name="unmatched_user" value="{{ user.id }}">
+            <input type="submit" value="Unmatch">
+          </form>
         </td>
       </tr>
       {% endfor %}

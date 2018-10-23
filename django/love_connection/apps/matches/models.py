@@ -23,6 +23,16 @@ class MatchManager(models.Manager):
       return True
     else:
       return False
+  
+  def remove_match(self, form):
+    # match = self.filter(user_from = form['user']).filter(user_to = form['unmatched_user'])
+    # match = self.filter(user_from = form['user'], user_to = form['unmatched_user'])
+    try:
+      match = self.get(user_from = form['user'], user_to = form['unmatched_user'])
+      match.delete()
+      return True
+    except:
+      return False
 
 class Match(models.Model):
   user_from = models.ForeignKey(User, related_name="matched_to")

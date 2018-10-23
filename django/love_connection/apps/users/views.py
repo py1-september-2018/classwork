@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from .models import User
 from ..matches.models import Match
+
+from django.core import serializers
+import json
 # Create your views here.
 def index(req):
   if 'user_id' not in req.session:
@@ -14,8 +17,6 @@ def index(req):
   current_user_matches_sent = Match.objects.filter(user_from=req.session['user_id'])
   current_user_matches_received = Match.objects.filter(user_to=req.session['user_id'])
   
-  print(current_user_matches_sent)
-
   context = {
     'mutual_matches': User.objects.filter(matched_to__in=current_user_matches_received).filter(matched_from__in=current_user_matches_sent),
     'matches_received': User.objects.filter(matched_to__in=current_user_matches_received),
@@ -86,3 +87,7 @@ def show(req, id):
     'mutual_matches': User.objects.filter(matched_from__in = current_user_matches_sent).filter(matched_to__in = current_user_matches_received)
   }
   return render(req, 'users/show.html', context)
+
+def search(req):
+  users = User.objects.filter(first_name__istartswith=req.POST['searchString'])
+  return HttpResponse(serializers.serialize("json", users), content_type="application/json", status=200)

@@ -25,3 +25,5 @@ server {
       proxy_pass http://unix:/home/ubuntu/deploy_demo/love_connection.sock;
   }
 }
+
+sudo ln -s /etc/nginx/sites-available/love_connection /etc/nginx/sites-enabled
